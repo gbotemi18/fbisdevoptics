@@ -23,6 +23,7 @@ import (
 	authhandlers "github.com/fbisdevoptics/backend/internal/modules/auth/handlers"
 	authrepositories "github.com/fbisdevoptics/backend/internal/modules/auth/repositories"
 	authservices "github.com/fbisdevoptics/backend/internal/modules/auth/services"
+	metricshandlers "github.com/fbisdevoptics/backend/internal/modules/metrics/handlers"
 	k8smonitoringhandlers "github.com/fbisdevoptics/backend/internal/modules/k8smonitoring/handlers"
 	k8smonitoringservices "github.com/fbisdevoptics/backend/internal/modules/k8smonitoring/services"
 	"github.com/fbisdevoptics/backend/internal/repositories"
@@ -30,6 +31,7 @@ import (
 )
 
 func main() {
+	startedAt := time.Now()
 	// Initialize logger
 	logger, err := zap.NewProduction()
 	if err != nil {
@@ -67,6 +69,7 @@ func main() {
 	userHandler := handlers.NewUserHandler(userService)
 	k8sHealthService := k8smonitoringservices.NewHealthService()
 	k8sHealthHandler := k8smonitoringhandlers.NewHealthHandler(k8sHealthService)
+	metricsHandler := metricshandlers.NewSummaryHandler(startedAt)
 	db, err := initDB(cfg)
 	if err != nil {
 		sugar.Fatalf("Failed to initialize database: %v", err)
@@ -96,6 +99,11 @@ func main() {
 		{
 			auth.POST("/signup", authHandler.SignUp)
 			auth.POST("/login", authHandler.Login)
+		}
+
+		metrics := apiV1.Group("/metrics")
+		{
+			metrics.GET("/summary", metricsHandler.GetSummary)
 		}
 
 		protected := apiV1.Group("/")
