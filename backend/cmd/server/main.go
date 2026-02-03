@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
 	"log"
 	"net"
@@ -13,11 +14,15 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"google.golang.org/grpc"
+	_ "github.com/lib/pq"
 	"go.uber.org/zap"
+	"google.golang.org/grpc"
 
 	"github.com/fbisdevoptics/backend/internal/config"
 	"github.com/fbisdevoptics/backend/internal/handlers"
+	authhandlers "github.com/fbisdevoptics/backend/internal/modules/auth/handlers"
+	authrepositories "github.com/fbisdevoptics/backend/internal/modules/auth/repositories"
+	authservices "github.com/fbisdevoptics/backend/internal/modules/auth/services"
 	k8smonitoringhandlers "github.com/fbisdevoptics/backend/internal/modules/k8smonitoring/handlers"
 	k8smonitoringservices "github.com/fbisdevoptics/backend/internal/modules/k8smonitoring/services"
 	"github.com/fbisdevoptics/backend/internal/repositories"
@@ -62,6 +67,20 @@ func main() {
 	userHandler := handlers.NewUserHandler(userService)
 	k8sHealthService := k8smonitoringservices.NewHealthService()
 	k8sHealthHandler := k8smonitoringhandlers.NewHealthHandler(k8sHealthService)
+	db, err := initDB(cfg)
+	if err != nil {
+		sugar.Fatalf("Failed to initialize database: %v", err)
+	}
+	defer db.Close()
+
+	if err := ensureAuthSchema(db); err != nil {
+		sugar.Fatalf("Failed to ensure auth schema: %v", err)
+	}
+
+	authRepo := authrepositories.NewUserRepository(db)
+	authService := authservices.NewAuthService(authRepo, cfg.Auth.JWTSecret)
+	authHandler := authhandlers.NewAuthHandler(authService)
+	authMiddleware := authhandlers.NewAuthMiddleware(authService)
 
 	// Register routes
 	apiV1 := router.Group("/api/v1")
@@ -73,9 +92,27 @@ func main() {
 			users.POST("", userHandler.CreateUser)
 		}
 
-		k8s := apiV1.Group("/k8s")
+		auth := apiV1.Group("/auth")
 		{
-			k8s.GET("/health/:cluster", k8sHealthHandler.GetClusterHealth)
+			auth.POST("/signup", authHandler.SignUp)
+			auth.POST("/login", authHandler.Login)
+		}
+
+		protected := apiV1.Group("/")
+		protected.Use(authMiddleware.RequireAuth())
+		{
+			k8sProtected := protected.Group("/k8s")
+			{
+				k8sProtected.GET("/health/:cluster", k8sHealthHandler.GetClusterHealth)
+			}
+
+			admin := protected.Group("/admin")
+			admin.Use(authMiddleware.RequireRole("admin"))
+			{
+				admin.GET("/overview", func(c *gin.Context) {
+					c.JSON(http.StatusOK, gin.H{"message": "admin access granted"})
+				})
+			}
 		}
 	}
 
@@ -163,7 +200,43 @@ func loggingMiddleware(logger *zap.Logger) gin.HandlerFunc {
 
 func healthCheckHandler(c *gin.Context) {
 	c.JSON(200, gin.H{
-		"status": "healthy",
+		"status":    "healthy",
 		"timestamp": time.Now(),
 	})
+}
+
+func initDB(cfg *config.Config) (*sql.DB, error) {
+	connStr := fmt.Sprintf(
+		"host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
+		cfg.Database.Host,
+		cfg.Database.Port,
+		cfg.Database.User,
+		cfg.Database.Password,
+		cfg.Database.Database,
+	)
+
+	db, err := sql.Open("postgres", connStr)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := db.Ping(); err != nil {
+		return nil, err
+	}
+
+	return db, nil
+}
+
+func ensureAuthSchema(db *sql.DB) error {
+	_, err := db.Exec(`
+CREATE TABLE IF NOT EXISTS auth_users (
+  id TEXT PRIMARY KEY,
+  full_name TEXT NOT NULL,
+  email TEXT UNIQUE NOT NULL,
+  password_hash TEXT NOT NULL,
+  role TEXT NOT NULL,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+`)
+	return err
 }

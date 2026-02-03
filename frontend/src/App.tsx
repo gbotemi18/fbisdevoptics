@@ -2,6 +2,7 @@ import { Routes, Route, Link } from 'react-router-dom'
 import UserModule from '@features/users'
 import BillingModule from '@features/billing'
 import K8sMonitoringModule from '@features/k8s-monitoring'
+import AuthModule from '@features/auth'
 
 export default function App() {
   return (
@@ -16,6 +17,7 @@ export default function App() {
               <li><Link to="/users" className="text-primary-500 hover:text-primary-900">Users</Link></li>
               <li><Link to="/billing" className="text-primary-500 hover:text-primary-900">Billing</Link></li>
               <li><Link to="/k8s-monitoring" className="text-primary-500 hover:text-primary-900">K8s Monitoring</Link></li>
+              <li><Link to="/auth" className="text-primary-500 hover:text-primary-900">Auth</Link></li>
             </ul>
           </div>
         </nav>
@@ -28,6 +30,7 @@ export default function App() {
           <Route path="/users/*" element={<UserModule />} />
           <Route path="/billing/*" element={<BillingModule />} />
           <Route path="/k8s-monitoring/*" element={<K8sMonitoringModule />} />
+          <Route path="/auth/*" element={<AuthModule />} />
         </Routes>
       </main>
 
