@@ -4,6 +4,7 @@ import UserModule from '@features/users'
 import BillingModule from '@features/billing'
 import K8sMonitoringModule from '@features/k8s-monitoring'
 import AuthModule from '@features/auth'
+import AdminModule from '@features/admin'
 
 export default function App() {
   return (
@@ -19,6 +20,7 @@ export default function App() {
               <li><Link to="/billing" className="text-primary-500 hover:text-primary-900">Billing</Link></li>
               <li><Link to="/k8s-monitoring" className="text-primary-500 hover:text-primary-900">K8s Monitoring</Link></li>
               <li><Link to="/auth" className="text-primary-500 hover:text-primary-900">Auth</Link></li>
+              <li><Link to="/admin/users" className="text-primary-500 hover:text-primary-900">Admin</Link></li>
             </ul>
           </div>
         </nav>
@@ -32,6 +34,7 @@ export default function App() {
           <Route path="/billing/*" element={<BillingModule />} />
           <Route path="/k8s-monitoring/*" element={<K8sMonitoringModule />} />
           <Route path="/auth/*" element={<AuthModule />} />
+          <Route path="/admin/*" element={<AdminModule />} />
         </Routes>
       </main>
 

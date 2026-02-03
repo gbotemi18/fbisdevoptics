@@ -20,6 +20,8 @@ type AuthService interface {
 	SignUp(fullName, email, password, role string) (models.User, string, error)
 	Login(email, password string) (models.User, string, error)
 	ValidateToken(token string) (*jwt.RegisteredClaims, string, error)
+	ListUsers() ([]models.User, error)
+	UpdateRole(id, role string) error
 }
 
 type authService struct {
@@ -34,6 +36,9 @@ func NewAuthService(repo repositories.UserRepository, jwtSecret string) AuthServ
 func (s *authService) SignUp(fullName, email, password, role string) (models.User, string, error) {
 	if role == "" {
 		role = models.RoleViewer
+	}
+	if !IsValidRole(role) {
+		return models.User{}, "", errors.New("invalid role")
 	}
 
 	if _, err := s.repo.GetByEmail(email); err == nil {
@@ -103,6 +108,25 @@ func (s *authService) ValidateToken(token string) (*jwt.RegisteredClaims, string
 
 	role, _ := parsed.Claims.(jwt.MapClaims)["role"].(string)
 	return claims, role, nil
+}
+
+func (s *authService) ListUsers() ([]models.User, error) {
+	users, err := s.repo.List()
+	if err != nil {
+		return nil, err
+	}
+
+	for i := range users {
+		users[i].PasswordHash = ""
+	}
+	return users, nil
+}
+
+func (s *authService) UpdateRole(id, role string) error {
+	if !IsValidRole(role) {
+		return errors.New("invalid role")
+	}
+	return s.repo.UpdateRole(id, role)
 }
 
 func (s *authService) issueToken(user models.User) (string, error) {

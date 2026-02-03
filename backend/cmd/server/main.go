@@ -23,9 +23,9 @@ import (
 	authhandlers "github.com/fbisdevoptics/backend/internal/modules/auth/handlers"
 	authrepositories "github.com/fbisdevoptics/backend/internal/modules/auth/repositories"
 	authservices "github.com/fbisdevoptics/backend/internal/modules/auth/services"
-	metricshandlers "github.com/fbisdevoptics/backend/internal/modules/metrics/handlers"
 	k8smonitoringhandlers "github.com/fbisdevoptics/backend/internal/modules/k8smonitoring/handlers"
 	k8smonitoringservices "github.com/fbisdevoptics/backend/internal/modules/k8smonitoring/services"
+	metricshandlers "github.com/fbisdevoptics/backend/internal/modules/metrics/handlers"
 	"github.com/fbisdevoptics/backend/internal/repositories"
 	"github.com/fbisdevoptics/backend/internal/services"
 )
@@ -120,6 +120,9 @@ func main() {
 				admin.GET("/overview", func(c *gin.Context) {
 					c.JSON(http.StatusOK, gin.H{"message": "admin access granted"})
 				})
+				admin.GET("/users", authHandler.ListUsers)
+				admin.POST("/users", authHandler.SignUp)
+				admin.PUT("/users/:id/role", authHandler.UpdateRole)
 			}
 		}
 	}
