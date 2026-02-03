@@ -46,19 +46,132 @@ export default function App() {
 
 function HomePage() {
   return (
-    <div className="text-center">
-      <h2 className="text-3xl font-bold mb-4">Welcome to FBIS DevOptics</h2>
-      <p className="text-gray-600 mb-8">
-        A production-grade, modular monorepo for modern SaaS applications.
-      </p>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <div className="p-6 bg-white rounded-lg shadow">
-          <h3 className="text-xl font-semibold mb-2">Frontend</h3>
-          <p className="text-gray-600">React + Vite + TypeScript + Redux + Tailwind</p>
+    <div className="min-h-[75vh] grid grid-cols-1 lg:grid-cols-[420px_1fr] gap-10 items-start">
+      <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
+        <div className="flex items-center gap-3 mb-6">
+          <div className="h-10 w-10 rounded-full bg-blue-50 flex items-center justify-center">
+            <span className="text-blue-600 font-bold">FB</span>
+          </div>
+          <div>
+            <p className="text-xs uppercase tracking-[0.2em] text-gray-400">FBIS DevOptics</p>
+            <h2 className="text-2xl font-bold">Welcome back</h2>
+          </div>
         </div>
-        <div className="p-6 bg-white rounded-lg shadow">
-          <h3 className="text-xl font-semibold mb-2">Backend</h3>
-          <p className="text-gray-600">Go + Gin + PostgreSQL + gRPC</p>
+
+        <p className="text-gray-500 mb-6">Sign in to access your monitoring dashboard.</p>
+
+        <form className="space-y-5">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Username</label>
+            <div className="flex items-center gap-2 border rounded-lg px-3 py-2 bg-gray-50">
+              <span className="text-gray-400">👤</span>
+              <input
+                className="w-full bg-transparent outline-none text-sm"
+                placeholder="Enter your username"
+              />
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Password</label>
+            <div className="flex items-center gap-2 border rounded-lg px-3 py-2 bg-gray-50">
+              <span className="text-gray-400">🔒</span>
+              <input
+                type="password"
+                className="w-full bg-transparent outline-none text-sm"
+                placeholder="Enter your password"
+              />
+              <span className="text-gray-400">👁️</span>
+            </div>
+          </div>
+          <button
+            type="button"
+            className="w-full bg-blue-100 text-blue-800 font-semibold py-3 rounded-lg shadow-sm hover:bg-blue-200 transition"
+          >
+            Sign in
+          </button>
+          <p className="text-sm text-gray-500 text-center">
+            Don&apos;t have an account? <span className="text-blue-600">Sign up</span>
+          </p>
+        </form>
+      </div>
+
+      <div className="space-y-6">
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <h2 className="text-3xl font-bold">20:05:17</h2>
+            <p className="text-gray-500 text-sm">Monitoring active since midnight</p>
+          </div>
+          <div className="flex items-center gap-2 border border-green-200 bg-green-50 text-green-700 px-3 py-1 rounded-lg text-sm font-semibold">
+            <span className="h-2 w-2 rounded-full bg-green-500"></span>
+            LIVE
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="bg-white rounded-xl shadow p-5 border border-gray-100">
+            <p className="text-xs uppercase tracking-widest text-gray-400 mb-2">Total endpoints</p>
+            <p className="text-2xl font-semibold">137</p>
+          </div>
+          <div className="bg-white rounded-xl shadow p-5 border border-gray-100">
+            <p className="text-xs uppercase tracking-widest text-gray-400 mb-2">Avg latency</p>
+            <p className="text-2xl font-semibold">177 <span className="text-sm text-gray-500">ms</span></p>
+          </div>
+          <div className="bg-white rounded-xl shadow p-5 border border-gray-100">
+            <p className="text-xs uppercase tracking-widest text-gray-400 mb-3">Uptime today</p>
+            <div className="flex items-center gap-3">
+              <div className="h-2 w-full bg-gray-100 rounded-full">
+                <div className="h-2 bg-green-600 rounded-full" style={{ width: '100%' }} />
+              </div>
+              <span className="text-sm font-semibold">100%</span>
+            </div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="bg-white rounded-xl shadow p-5 border border-gray-100">
+            <p className="text-xs uppercase tracking-widest text-gray-400 mb-2">Scheduled APIs</p>
+            <p className="text-2xl font-semibold">6</p>
+          </div>
+          <div className="bg-white rounded-xl shadow p-5 border border-gray-100">
+            <p className="text-xs uppercase tracking-widest text-gray-400 mb-2">Total runs today</p>
+            <p className="text-2xl font-semibold">1227</p>
+          </div>
+          <div className="bg-white rounded-xl shadow p-5 border border-gray-100">
+            <p className="text-xs uppercase tracking-widest text-gray-400 mb-2">Success rate today</p>
+            <p className="text-2xl font-semibold">97<span className="text-sm text-gray-500">%</span></p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="bg-white rounded-xl shadow p-5 border border-gray-100">
+            <p className="text-xs uppercase tracking-widest text-gray-400 mb-2">Scheduled runs today</p>
+            <p className="text-2xl font-semibold">4</p>
+          </div>
+          <div className="bg-white rounded-xl shadow p-5 border border-gray-100">
+            <p className="text-xs uppercase tracking-widest text-gray-400 mb-3">Pipeline success rate</p>
+            <div className="flex items-center gap-3">
+              <div className="h-2 w-full bg-gray-100 rounded-full">
+                <div className="h-2 bg-blue-600 rounded-full" style={{ width: '100%' }} />
+              </div>
+              <span className="text-sm font-semibold">100%</span>
+            </div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="bg-white rounded-xl shadow p-5 border border-gray-100">
+            <p className="text-xs uppercase tracking-widest text-gray-400 mb-2">Servers active</p>
+            <p className="text-2xl font-semibold">0/0</p>
+          </div>
+          <div className="bg-white rounded-xl shadow p-5 border border-gray-100">
+            <p className="text-xs uppercase tracking-widest text-gray-400 mb-3">Server uptime</p>
+            <div className="flex items-center gap-3">
+              <div className="h-2 w-full bg-gray-100 rounded-full">
+                <div className="h-2 bg-green-600 rounded-full" style={{ width: '100%' }} />
+              </div>
+              <span className="text-sm font-semibold">100%</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
