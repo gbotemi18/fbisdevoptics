@@ -10,7 +10,7 @@ export default function App() {
       <header className="bg-white shadow">
         <nav className="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between">
-            <h1 className="text-2xl font-bold text-primary-900">MyPlatform</h1>
+            <h1 className="text-2xl font-bold text-primary-900">FBIS DevOptics</h1>
             <ul className="flex gap-4">
               <li><Link to="/" className="text-primary-500 hover:text-primary-900">Home</Link></li>
               <li><Link to="/users" className="text-primary-500 hover:text-primary-900">Users</Link></li>
@@ -34,7 +34,7 @@ export default function App() {
       {/* Footer */}
       <footer className="bg-gray-800 text-white mt-12">
         <div className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
-          <p>&copy; 2024 MyPlatform. All rights reserved.</p>
+          <p>&copy; 2024 FBIS DevOptics. All rights reserved.</p>
         </div>
       </footer>
     </div>
@@ -44,7 +44,7 @@ export default function App() {
 function HomePage() {
   return (
     <div className="text-center">
-      <h2 className="text-3xl font-bold mb-4">Welcome to MyPlatform</h2>
+      <h2 className="text-3xl font-bold mb-4">Welcome to FBIS DevOptics</h2>
       <p className="text-gray-600 mb-8">
         A production-grade, modular monorepo for modern SaaS applications.
       </p>
