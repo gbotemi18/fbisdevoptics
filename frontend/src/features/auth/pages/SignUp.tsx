@@ -5,13 +5,20 @@ import {
   FormLabel,
   Heading,
   Input,
+  InputGroup,
+  InputLeftElement,
+  InputRightElement,
   Select,
   Stack,
   Text,
   Alert,
   AlertIcon,
+  Link,
+  HStack,
+  Divider,
 } from '@chakra-ui/react'
 import { FormEvent, useState } from 'react'
+import { Link as RouterLink } from 'react-router-dom'
 
 import { saveAuth } from '../authStorage'
 
@@ -22,6 +29,7 @@ export default function SignUp() {
   const [role, setRole] = useState('viewer')
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault()
@@ -35,7 +43,10 @@ export default function SignUp() {
         body: JSON.stringify({ fullName, email, password, role }),
       })
 
-      const data = await response.json()
+      const contentType = response.headers.get('content-type') || ''
+      const data = contentType.includes('application/json')
+        ? await response.json()
+        : { error: await response.text() }
       if (!response.ok) {
         throw new Error(data.error || 'Unable to sign up')
       }
@@ -48,11 +59,19 @@ export default function SignUp() {
   }
 
   return (
-    <Box bg="white" p={8} rounded="lg" shadow="md">
-      <Heading size="lg" mb={2}>Create an account</Heading>
-      <Text color="gray.600" mb={6}>
-        Choose a role to define access for this user.
-      </Text>
+    <Box bg="white" p={10} rounded="2xl" shadow="xl" border="1px solid" borderColor="gray.100">
+      <Box textAlign="center" mb={6}>
+        <HStack spacing={2} justify="center" mb={4}>
+          <Box w="46px" h="46px" rounded="full" bg="gray.50" border="1px solid" borderColor="gray.200" display="flex" alignItems="center" justifyContent="center">
+            <Text fontWeight="bold" color="gray.700">FB</Text>
+          </Box>
+          <Text fontSize="2xl" fontWeight="bold">FBIS DevOptics</Text>
+        </HStack>
+        <Heading size="lg" mb={2}>Create account</Heading>
+        <Text color="gray.600">
+          Sign up to start monitoring your systems
+        </Text>
+      </Box>
       <Stack spacing={4} as="form" onSubmit={handleSubmit}>
         {error && (
           <Alert status="error">
@@ -67,30 +86,50 @@ export default function SignUp() {
           </Alert>
         )}
         <FormControl isRequired>
-          <FormLabel>Full name</FormLabel>
-          <Input
-            placeholder="Jane Doe"
-            value={fullName}
-            onChange={(event) => setFullName(event.target.value)}
-          />
+          <FormLabel>Username</FormLabel>
+          <InputGroup>
+            <InputLeftElement pointerEvents="none" color="gray.400">
+              <span>👤</span>
+            </InputLeftElement>
+            <Input
+              placeholder="Enter your username"
+              value={fullName}
+              onChange={(event) => setFullName(event.target.value)}
+            />
+          </InputGroup>
         </FormControl>
         <FormControl isRequired>
           <FormLabel>Email</FormLabel>
-          <Input
-            type="email"
-            placeholder="jane@company.com"
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
-          />
+          <InputGroup>
+            <InputLeftElement pointerEvents="none" color="gray.400">
+              <span>✉️</span>
+            </InputLeftElement>
+            <Input
+              type="email"
+              placeholder="Enter your email"
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
+            />
+          </InputGroup>
         </FormControl>
         <FormControl isRequired>
           <FormLabel>Password</FormLabel>
-          <Input
-            type="password"
-            placeholder="Create a password"
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
-          />
+          <InputGroup>
+            <InputLeftElement pointerEvents="none" color="gray.400">
+              <span>🔒</span>
+            </InputLeftElement>
+            <Input
+              type={showPassword ? 'text' : 'password'}
+              placeholder="Enter your password"
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+            />
+            <InputRightElement>
+              <Button size="sm" variant="ghost" onClick={() => setShowPassword((prev) => !prev)}>
+                {showPassword ? '🙈' : '👁️'}
+              </Button>
+            </InputRightElement>
+          </InputGroup>
         </FormControl>
         <FormControl>
           <FormLabel>Role</FormLabel>
@@ -102,6 +141,13 @@ export default function SignUp() {
           </Select>
         </FormControl>
         <Button type="submit" colorScheme="blue" size="lg">Create account</Button>
+        <Divider />
+        <Text textAlign="center" color="gray.500">
+          Already have an account?{' '}
+          <Link as={RouterLink} to="/auth/sign-in" color="blue.600" fontWeight="semibold">
+            Sign in
+          </Link>
+        </Text>
       </Stack>
     </Box>
   )
