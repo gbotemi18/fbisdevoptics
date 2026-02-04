@@ -80,9 +80,11 @@ function HomePage() {
     <div className="min-h-[75vh] grid grid-cols-1 lg:grid-cols-[420px_1fr] gap-10 items-start">
       <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
         <div className="flex items-center gap-3 mb-6">
-          <div className="h-10 w-10 rounded-full bg-blue-50 flex items-center justify-center">
-            <span className="text-blue-600 font-bold">FB</span>
-          </div>
+          <img
+            src="/fbis-logo.jpg"
+            alt="FBIS Technologies Limited"
+            className="h-10 object-contain"
+          />
           <div>
             <p className="text-xs uppercase tracking-[0.2em] text-gray-400">FBIS DevOptics</p>
             <h2 className="text-2xl font-bold">Welcome back</h2>

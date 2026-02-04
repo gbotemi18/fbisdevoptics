@@ -62,10 +62,13 @@ export default function SignUp() {
     <Box bg="white" p={10} rounded="2xl" shadow="xl" border="1px solid" borderColor="gray.100">
       <Box textAlign="center" mb={6}>
         <HStack spacing={2} justify="center" mb={4}>
-          <Box w="46px" h="46px" rounded="full" bg="gray.50" border="1px solid" borderColor="gray.200" display="flex" alignItems="center" justifyContent="center">
-            <Text fontWeight="bold" color="gray.700">FB</Text>
-          </Box>
-          <Text fontSize="2xl" fontWeight="bold">FBIS DevOptics</Text>
+          <Box
+            as="img"
+            src="/fbis-logo.jpg"
+            alt="FBIS Technologies Limited"
+            w="160px"
+            objectFit="contain"
+          />
         </HStack>
         <Heading size="lg" mb={2}>Create account</Heading>
         <Text color="gray.600">

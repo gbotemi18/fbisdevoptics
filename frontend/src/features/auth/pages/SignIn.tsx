@@ -1,7 +1,6 @@
 import {
   Box,
   Button,
-  Divider,
   FormControl,
   FormLabel,
   Heading,
@@ -59,17 +58,20 @@ export default function SignIn() {
     <Box bg="white" p={10} rounded="2xl" shadow="xl" border="1px solid" borderColor="gray.100">
       <Box textAlign="center" mb={6}>
         <HStack spacing={2} justify="center" mb={4}>
-          <Box w="46px" h="46px" rounded="full" bg="gray.50" border="1px solid" borderColor="gray.200" display="flex" alignItems="center" justifyContent="center">
-            <Text fontWeight="bold" color="gray.700">FB</Text>
-          </Box>
-          <Text fontSize="2xl" fontWeight="bold">FBIS DevOptics</Text>
+          <Box
+            as="img"
+            src="/fbis-logo.jpg"
+            alt="FBIS Technologies Limited"
+            w="160px"
+            objectFit="contain"
+          />
         </HStack>
         <Heading size="lg" mb={2}>Welcome back</Heading>
         <Text color="gray.600">
           Sign in to access your monitoring dashboard
         </Text>
       </Box>
-      <Stack spacing={4} as="form" onSubmit={handleSubmit}>
+      <Stack spacing={5} as="form" onSubmit={handleSubmit}>
         {error && (
           <Alert status="error">
             <AlertIcon />
@@ -83,14 +85,14 @@ export default function SignIn() {
           </Alert>
         )}
         <FormControl isRequired>
-          <FormLabel>Email</FormLabel>
+          <FormLabel>Username</FormLabel>
           <InputGroup>
             <InputLeftElement pointerEvents="none" color="gray.400">
-              <span>✉️</span>
+              <span>👤</span>
             </InputLeftElement>
             <Input
               type="email"
-              placeholder="Enter your email"
+              placeholder="Enter your username"
               value={email}
               onChange={(event) => setEmail(event.target.value)}
             />
@@ -116,8 +118,6 @@ export default function SignIn() {
           </InputGroup>
         </FormControl>
         <Button type="submit" colorScheme="blue" size="lg">Sign in</Button>
-        <Divider />
-        <Button variant="outline">Continue with Google</Button>
         <Text textAlign="center" color="gray.500">
           Don&apos;t have an account?{' '}
           <Link as={RouterLink} to="/auth/sign-up" color="blue.600" fontWeight="semibold">
